@@ -4,73 +4,693 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TranCut — AI-Powered Video Editor</title>
-  <meta name="description" content="TranCut helps you transcribe, translate, subtitle, and prepare English videos for Chinese-speaking audiences — faster, cleaner, and with fewer manual steps." />
-  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <meta name="description" content="Turn English videos into Chinese-ready content with AI transcription, translation, subtitles, and export workflows." />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: #111833;
+      --card: rgba(255,255,255,0.06);
+      --card-border: rgba(255,255,255,0.12);
+      --text: #f4f7ff;
+      --muted: #b8c0dd;
+      --accent: #6ea8ff;
+      --accent-2: #8a7dff;
+      --accent-3: #7ff0d4;
+      --shadow: 0 18px 50px rgba(0,0,0,0.35);
+      --radius: 24px;
+      --max: 1160px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(110,168,255,0.20), transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(138,125,255,0.18), transparent 28%),
+        linear-gradient(180deg, #0a1020 0%, #0a0f1b 100%);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+      background: rgba(10, 15, 27, 0.72);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 10px 24px rgba(110,168,255,0.28);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-mark::before,
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+    }
+
+    .brand-mark::before {
+      width: 22px;
+      height: 6px;
+      left: 8px;
+      top: 12px;
+      transform: rotate(-28deg);
+    }
+
+    .brand-mark::after {
+      width: 18px;
+      height: 6px;
+      left: 13px;
+      top: 21px;
+      transform: rotate(-28deg);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 22px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .button:hover { transform: translateY(-1px); }
+
+    .button-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      box-shadow: 0 12px 26px rgba(110,168,255,0.24);
+    }
+
+    .button-secondary {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.12);
+      color: var(--text);
+    }
+
+    .hero {
+      padding: 72px 0 44px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(127,240,212,0.09);
+      border: 1px solid rgba(127,240,212,0.18);
+      color: var(--accent-3);
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.6rem, 6vw, 5rem);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+      max-width: 12ch;
+    }
+
+    .hero p {
+      font-size: 1.12rem;
+      line-height: 1.72;
+      color: var(--muted);
+      max-width: 62ch;
+      margin: 22px 0 0;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .micro-copy {
+      margin-top: 18px;
+      color: #d5dcf4;
+      font-size: 0.96rem;
+    }
+
+    .hero-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: auto -20% -35% auto;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(127,240,212,0.24), transparent 65%);
+      pointer-events: none;
+    }
+
+    .window-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .window-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+    }
+
+    .preview-layout {
+      display: grid;
+      gap: 16px;
+    }
+
+    .preview-box {
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .preview-video {
+      aspect-ratio: 16 / 10;
+      border-radius: 20px;
+      background:
+        linear-gradient(135deg, rgba(110,168,255,0.32), rgba(138,125,255,0.18)),
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.10);
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+
+    .play {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+    }
+
+    .play::before {
+      content: "";
+      width: 0;
+      height: 0;
+      border-left: 22px solid #4e69ff;
+      border-top: 14px solid transparent;
+      border-bottom: 14px solid transparent;
+      margin-left: 6px;
+    }
+
+    .subtitle-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: #dfe6ff;
+      font-size: 0.95rem;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .subtitle-row:last-child { border-bottom: 0; }
+
+    .section {
+      padding: 28px 0 26px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.7rem, 3vw, 2.6rem);
+      letter-spacing: -0.03em;
+    }
+
+    .section-copy {
+      color: var(--muted);
+      max-width: 60ch;
+      line-height: 1.7;
+      font-size: 1.02rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin: 12px 0 10px;
+      font-size: 1.18rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.68;
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(110,168,255,0.18), rgba(138,125,255,0.18));
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: 1.2rem;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .workflow-step {
+      padding: 22px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .workflow-step .step-number {
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      font-size: 0.92rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .cta {
+      padding: 36px;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(127,240,212,0.16), transparent 25%),
+        radial-gradient(circle at 90% 20%, rgba(110,168,255,0.16), transparent 28%),
+        rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .cta p { margin: 10px 0 0; color: var(--muted); line-height: 1.7; }
+
+    .site-footer {
+      padding: 26px 0 42px;
+      color: var(--muted);
+    }
+
+    .footer-grid {
+      border-top: 1px solid rgba(255,255,255,0.10);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .support-email {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .coming-soon {
+      display: inline-flex;
+      margin-left: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      color: var(--accent-3);
+      background: rgba(127,240,212,0.10);
+      border: 1px solid rgba(127,240,212,0.16);
+      vertical-align: middle;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .grid-4,
+      .grid-3,
+      .workflow {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 48px;
+      }
+
+      .section-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav-actions {
+        display: none;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .cta {
+        padding: 24px;
+      }
+
+      h1 {
+        max-width: none;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
     <div class="container nav">
-      <a href="index.html" class="brand" aria-label="TranCut home">
+      <a href="#top" class="brand" aria-label="TranCut home">
         <span class="brand-mark" aria-hidden="true"></span>
         <span>TranCut</span>
       </a>
-      <div class="nav-group">
-        <nav class="nav-links" aria-label="Main navigation">
-          <a href="#features">Features</a>
-          <a href="download.html">Download</a>
-          <a href="try-online.html">Try Online</a>
-          <a href="support.html">Support</a>
-          <a href="privacy.html">Privacy</a>
-        </nav>
-        <div class="language-switch" aria-label="Language selector">
-          <a class="active" href="index.html">EN</a>
-          <a class="" href="../zh-hant/index.html">繁</a>
-          <a class="" href="../zh-hans/index.html">简</a>
-        </div>
-      </div>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#features">Why TranCut</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#download">Download</a>
+        <a href="#support">Support</a>
+      </nav>
+
       <div class="nav-actions">
-        <a class="button button-secondary" href="download.html">Download</a>
-        <a class="button button-primary" href="try-online.html">Try Online</a>
+        <a class="button button-secondary" href="#download">Download</a>
+        <a class="button button-primary" href="#try-online">Try Online</a>
       </div>
     </div>
   </header>
 
-  <main>
+  <main id="top">
     <section class="hero">
       <div class="container hero-grid">
         <div>
-          <div class="eyebrow">AI-Powered Video Editor</div>
-          <h1>Turn English videos into Chinese-ready videos.</h1>
-          <p>TranCut helps you transcribe, translate, subtitle, and prepare English videos for Chinese-speaking audiences — faster, cleaner, and with fewer manual steps.</p>
+          <div class="eyebrow">AI Video Localization for English-to-Chinese Workflows</div>
+          <h1>Turn English videos into Chinese-ready content faster</h1>
+          <p>
+            TranCut helps creators, educators, and teams transcribe, translate, subtitle, and prepare English videos for Chinese-speaking audiences — with a cleaner and faster workflow.
+          </p>
           <div class="hero-actions">
-            <a class="button button-primary" href="try-online.html">Try Online</a>
-            <a class="button button-secondary" href="download.html">Download</a>
+            <a class="button button-primary" href="#try-online">Try Online</a>
+            <a class="button button-secondary" href="#download">Download</a>
           </div>
-          <div class="micro-copy">Built for creators, educators, studios, and teams who need faster video localization.</div>
+          <div class="micro-copy">Built for YouTube videos, lessons, interviews, explainers, and multilingual publishing workflows.</div>
         </div>
+
         <div class="hero-card" aria-label="TranCut preview panel">
-          <div class="window-bar" aria-hidden="true"><span class="window-dot"></span><span class="window-dot"></span><span class="window-dot"></span></div>
-          <div class="preview-layout"><div class="preview-video"><div class="play" aria-hidden="true"></div></div><div class="preview-box"><div class="subtitle-row"><span>English transcript detected</span><strong>Ready</strong></div>
+          <div class="window-bar" aria-hidden="true">
+            <span class="window-dot"></span>
+            <span class="window-dot"></span>
+            <span class="window-dot"></span>
+          </div>
+
+          <div class="preview-layout">
+            <div class="preview-video">
+              <div class="play" aria-hidden="true"></div>
+            </div>
+
+            <div class="preview-box">
+              <div class="subtitle-row"><span>English transcript detected</span><strong>Ready</strong></div>
               <div class="subtitle-row"><span>Chinese subtitle draft generated</span><strong>Ready</strong></div>
-              <div class="subtitle-row"><span>Export for editing workflow</span><strong>SRT / TXT</strong></div></div></div>
+              <div class="subtitle-row"><span>Export for editing workflow</span><strong>SRT / TXT</strong></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
-    <section class="section" id="features"><div class="container"><div class="section-header"><div><h2>From English video to Chinese-ready content</h2></div><div class="section-copy">A focused workflow for turning spoken English into usable Chinese-ready output for subtitling, editing, and publishing.</div></div><div class="grid-3"><article class="card"><div class="icon">✦</div><h3>Transcribe</h3><p>Automatically turn spoken English into clean, editable text for review and subtitle preparation.</p></article>
-          <article class="card"><div class="icon">文</div><h3>Translate</h3><p>Convert English subtitles into natural Chinese for faster localization and wider audience reach.</p></article>
-          <article class="card"><div class="icon">⇪</div><h3>Export</h3><p>Prepare subtitle-ready or voiceover-ready output for your editing, distribution, and publishing workflow.</p></article></div></div></section>
-    <section class="section" id="workflow"><div class="container"><div class="section-header"><div><h2>Made for modern video workflows</h2></div><div class="section-copy">Keep the process simple: upload, process, review, and move your output into the tools you already use.</div></div><div class="workflow"><div class="workflow-step"><div class="step-number">1</div><h3>Upload your English video</h3><p>Bring in clips, lectures, interviews, or YouTube-ready source footage.</p></div>
-          <div class="workflow-step"><div class="step-number">2</div><h3>Generate transcript and translation</h3><p>Use AI to create English text and Chinese subtitle drafts with less manual prep.</p></div>
-          <div class="workflow-step"><div class="step-number">3</div><h3>Export for editing or publishing</h3><p>Move faster with output that fits real subtitling and localization workflows.</p></div></div></div></section>
-    <section class="section"><div class="container"><div class="section-header"><div><h2>Everything you need to prepare videos faster</h2></div><div class="section-copy">Focused features for creators, educators, studios, and multilingual publishing teams.</div></div><div class="grid-4"><article class="card"><div class="icon">AI</div><h3>AI Transcription</h3><p>Detect spoken English and convert it into editable text for review and cleanup.</p></article>
-          <article class="card"><div class="icon">中</div><h3>Chinese Translation</h3><p>Generate Chinese subtitles faster for a smoother localization workflow.</p></article>
-          <article class="card"><div class="icon">SRT</div><h3>Clean Output</h3><p>Prepare subtitle-ready text and other export-friendly output for editing software.</p></article>
-          <article class="card"><div class="icon">→</div><h3>Simple Workflow</h3><p>Reduce repetitive manual steps and keep your production flow clean and practical.</p></article></div></div></section>
-    <section class="section" id="download"><div class="container"><div class="cta"><div><h2>Download TranCut</h2><p>Use TranCut on desktop for a more complete editing workflow and export-friendly setup.</p></div><div class="hero-actions" style="margin-top:0;"><a class="button button-primary" href="download.html">Download for macOS</a><a class="button button-secondary" href="download.html">Windows <span class="coming-soon">Coming Soon</span></a></div></div></div></section>
-    <section class="section" id="try-online"><div class="container"><div class="cta"><div><h2>Try TranCut online</h2><p>Upload a short clip and explore how TranCut helps turn English video into Chinese-ready content.</p></div><div class="hero-actions" style="margin-top:0;"><a class="button button-primary" href="try-online.html">Try Online</a></div></div></div></section>
-    <section class="section" id="support-block"><div class="container"><div class="card"><h2>Need help?</h2><p class="section-copy">For support, product questions, partnership inquiries, or early access requests, contact us at <a class="support-email" href="mailto:support@trancut.com">support@trancut.com</a>.</p></div></div></section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2>Why TranCut</h2>
+          </div>
+          <div class="section-copy">
+            Video localization often takes too many manual steps. TranCut simplifies the process by helping you move from spoken English to Chinese-ready output with less friction and more speed.
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <article class="card">
+            <div class="icon">✦</div>
+            <h3>Save time</h3>
+            <p>Reduce repetitive subtitle and translation prep work.</p>
+          </article>
+          <article class="card">
+            <div class="icon">文</div>
+            <h3>Stay organized</h3>
+            <p>Keep your transcript, translation, and export workflow cleaner.</p>
+          </article>
+          <article class="card">
+            <div class="icon">⇪</div>
+            <h3>Publish faster</h3>
+            <p>Prepare videos for Chinese-speaking audiences with fewer manual steps.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="workflow">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2>A simpler workflow from English video to Chinese-ready output</h2>
+          </div>
+          <div class="section-copy">
+            Move from spoken English to transcript, translation, and export in a cleaner workflow.
+          </div>
+        </div>
+
+        <div class="workflow">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <h3>Transcribe</h3>
+            <p>Convert spoken English into editable text.</p>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <h3>Translate</h3>
+            <p>Generate Chinese subtitle-ready content for review.</p>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <h3>Export</h3>
+            <p>Prepare output for editing, subtitling, or publishing.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2>Focused features for faster video localization</h2>
+          </div>
+          <div class="section-copy">
+            Built for creators, educators, and multilingual publishing teams.
+          </div>
+        </div>
+
+        <div class="grid-4">
+          <article class="card">
+            <div class="icon">AI</div>
+            <h3>AI Transcription</h3>
+            <p>Detect spoken English and generate editable transcript text.</p>
+          </article>
+          <article class="card">
+            <div class="icon">中</div>
+            <h3>Chinese Translation</h3>
+            <p>Prepare Chinese subtitle drafts for faster review and localization.</p>
+          </article>
+          <article class="card">
+            <div class="icon">SRT</div>
+            <h3>Subtitle-Ready Output</h3>
+            <p>Export clean text for editing software and subtitle workflows.</p>
+          </article>
+          <article class="card">
+            <div class="icon">→</div>
+            <h3>Workflow Simplicity</h3>
+            <p>Reduce unnecessary manual steps and keep production moving.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="download">
+      <div class="container">
+        <div class="cta">
+          <div>
+            <h2>Download TranCut</h2>
+            <p>Use TranCut on desktop for a more complete and flexible production workflow.</p>
+          </div>
+          <div class="hero-actions" style="margin-top:0;">
+            <a class="button button-primary" href="#">Download for macOS</a>
+            <a class="button button-secondary" href="#">Windows <span class="coming-soon">Coming Soon</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="try-online">
+      <div class="container">
+        <div class="cta">
+          <div>
+            <h2>Try TranCut online</h2>
+            <p>Explore TranCut online and see how English video can move toward Chinese-ready output in a cleaner workflow.</p>
+          </div>
+          <div class="hero-actions" style="margin-top:0;">
+            <a class="button button-primary" href="#">Try Online</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="support">
+      <div class="container">
+        <div class="card">
+          <h2>Need help or want early access updates?</h2>
+          <p class="section-copy">
+            For support, product questions, partnership inquiries, or early access requests, contact us at
+            <a class="support-email" href="mailto:support@trancut.com">support@trancut.com</a>.
+          </p>
+        </div>
+      </div>
+    </section>
   </main>
-  <footer class="site-footer"><div class="container footer-grid"><div>© 2026 TranCut. All rights reserved.</div><div class="footer-links"><a href="index.html#features">Features</a><a href="download.html">Download</a><a href="try-online.html">Try Online</a><a href="support.html">Support</a><a href="privacy.html">Privacy Policy</a><a href="mailto:support@trancut.com">support@trancut.com</a></div></div></footer>
-  <script src="../assets/js/main.js"></script>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>© 2026 TranCut. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="#features">Why TranCut</a>
+        <a href="#download">Download</a>
+        <a href="#try-online">Try Online</a>
+        <a href="#support">Support</a>
+        <a href="mailto:support@trancut.com">support@trancut.com</a>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
