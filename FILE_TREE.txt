@@ -1,0 +1,28 @@
+/Users/max/Documents/Trancut
+├── README_LOCAL_SETUP.txt
+├── FILE_TREE.txt
+├── index.html
+├── en
+│   ├── index.html
+│   ├── download.html
+│   ├── try-online.html
+│   ├── privacy.html
+│   └── support.html
+├── zh-hant
+│   ├── index.html
+│   ├── download.html
+│   ├── try-online.html
+│   ├── privacy.html
+│   └── support.html
+├── zh-hans
+│   ├── index.html
+│   ├── download.html
+│   ├── try-online.html
+│   ├── privacy.html
+│   └── support.html
+└── assets
+    ├── css
+    │   └── styles.css
+    ├── js
+    │   └── main.js
+    └── img
