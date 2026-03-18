@@ -93,32 +93,33 @@ a { color: inherit; text-decoration: none; }
 .nav-group {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 14px;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
   color: var(--muted);
-  font-size: 0.98rem;
+  font-size: 0.96rem;
 }
 
 .language-switch {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px;
+  gap: 4px;
+  padding: 5px;
   border: 1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.04);
   border-radius: 999px;
+  white-space: nowrap;
 }
 
 .language-switch a {
-  padding: 7px 11px;
+  padding: 7px 10px;
   border-radius: 999px;
   color: var(--muted);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 700;
 }
 
