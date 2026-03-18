@@ -403,3 +403,9 @@ h2 { margin: 0; font-size: clamp(1.7rem, 3vw, 2.6rem); letter-spacing: -0.03em; 
 @media (max-width: 980px) {
   .status-grid { grid-template-columns: 1fr; }
 }
+.brand-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: block;
+}
